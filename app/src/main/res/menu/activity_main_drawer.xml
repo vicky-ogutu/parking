@@ -10,7 +10,7 @@
             android:title="@string/menu_home" />
 
         <item
-            android:id="@+id/nav_verfy_visitor"
+            android:id="@+id/nav_verify_visitor"
             android:icon="@drawable/ic_verify_visitor"
             android:title="@string/verify_visitors" />
 

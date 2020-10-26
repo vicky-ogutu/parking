@@ -20,6 +20,11 @@
         android:name="com.mhealthkenya.hn.sehemusecurity.fragments.visitors.AnnounceVisitorFragment"
         android:label="Announce Visitor"
         tools:layout="@layout/fragment_announce_visitor" />
+    <activity
+        android:id="@+id/nav_verify_visitor"
+        android:name="com.mhealthkenya.hn.sehemusecurity.activities.ScanQrActivity"
+        android:label="Verify Visitor"
+        tools:layout="@layout/activity_scan_qr" />
 
 
 </navigation>
