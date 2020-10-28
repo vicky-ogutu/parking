@@ -188,7 +188,6 @@
                         android:layout_height="wrap_content"
                         android:text="About you"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/grey_90"
                         android:textStyle="bold"/>
 
                     <LinearLayout

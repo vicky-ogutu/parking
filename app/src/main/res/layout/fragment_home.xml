@@ -53,23 +53,21 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/spacing_large" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_medium"
                         android:text="Welcome to Sehemu"
                         android:textAllCaps="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/blue_grey_800"
                         android:textStyle="bold" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_medium"
                         android:text="Security for all."
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                        android:textColor="@color/blue_grey_300"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -101,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/verifyVisitorImageView"
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
@@ -116,13 +114,12 @@
                             android:orientation="horizontal"
                             android:padding="@dimen/spacing_large">
 
-                            <TextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:text="@string/verify_visitors"
-                                android:textColor="@color/grey_90" />
+                                android:text="@string/verify_visitors" />
 
 
                         </LinearLayout>
@@ -144,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/announceVisitorImageView"
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
@@ -165,13 +162,12 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <TextView
+                                <com.google.android.material.textview.MaterialTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:maxLines="1"
                                     android:singleLine="true"
-                                    android:text="@string/announce_visitors"
-                                    android:textColor="@color/grey_90" />
+                                    android:text="@string/announce_visitors" />
 
 
                             </LinearLayout>
@@ -207,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/myProfileView"
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
@@ -228,13 +224,12 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <TextView
+                                <com.google.android.material.textview.MaterialTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:maxLines="1"
                                     android:singleLine="true"
-                                    android:text="@string/profile"
-                                    android:textColor="@color/grey_90" />
+                                    android:text="@string/profile" />
 
                             </LinearLayout>
 
