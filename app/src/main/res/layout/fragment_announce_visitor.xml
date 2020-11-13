@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frag_announce_visitor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -70,10 +71,10 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/surname"
+                            android:id="@+id/last_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Surname"
+                            android:hint="Last Name"
                             android:inputType="textCapWords" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -126,6 +127,34 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/car_registraion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Car Registration."
+                            android:inputType="textCapWords" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                        android:id="@+id/property_Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xxlarge"
+                        android:layout_marginHorizontal="@dimen/spacing_middle"
+                        android:layout_marginVertical="@dimen/spacing_middle"
+                        android:minHeight="@dimen/spacing_xmlarge"
+                        android:paddingLeft="@dimen/spacing_large"
+                        android:paddingRight="@dimen/spacing_large"
+                        android:drawSelectorOnTop="true" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginHorizontal="@dimen/spacing_middle"
+                        android:layout_marginVertical="@dimen/spacing_middle"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/office_visiting"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -134,9 +163,23 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
+
+                    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                        android:id="@+id/personVisiting_Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xxlarge"
+                        android:layout_marginHorizontal="@dimen/spacing_middle"
+                        android:layout_marginVertical="@dimen/spacing_middle"
+                        android:minHeight="@dimen/spacing_xmlarge"
+                        android:paddingLeft="@dimen/spacing_large"
+                        android:paddingRight="@dimen/spacing_large"
+                        android:drawSelectorOnTop="true" />
+
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginHorizontal="@dimen/spacing_middle"
                         android:layout_marginVertical="@dimen/spacing_middle"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -151,7 +194,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_complete_dependant"
+                        android:id="@+id/btn_submit"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginHorizontal="@dimen/spacing_middle"

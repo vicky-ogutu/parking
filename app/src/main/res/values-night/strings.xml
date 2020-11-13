@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="verify_visitors">Verify Visitors</string>
+    <string name="about_text">SeQuApp is a security platform in which automation of security processes are automated to make management of guests is quick and efficient.</string>
+    <string name="visitor_details">Visitor Details</string>
+    <string name="below_is_the_biodata_of_the_user">Below is the biodata of the visitor.</string>
+    <string name="name">First Name</string>
+    <string name="national_id">National ID</string>
+    <string name="phone">Phone Number</string>
+    <string name="date_of_visit">Date of Visit</string>
+    <string name="vehicle_reg">Vehicle Registration</string>
+    <string name="time">Time of Visit</string>
+    <string name="person_visiting">Person Visiting</string>
 </resources>

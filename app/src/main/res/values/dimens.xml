@@ -29,5 +29,7 @@
 
     <dimen name="placeholder_text_height">8dp</dimen>
 
+    <dimen name="default_delete_button_size">16dp</dimen>
+
 
 </resources>

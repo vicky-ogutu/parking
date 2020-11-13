@@ -4,22 +4,86 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.fxn.stash.Stash;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.mhealthkenya.hn.sehemusecurity.R;
+import com.mhealthkenya.hn.sehemusecurity.dependancies.Constants;
+import com.mhealthkenya.hn.sehemusecurity.fragments.ProfileFragment;
+import com.mhealthkenya.hn.sehemusecurity.models.Organization;
+import com.mhealthkenya.hn.sehemusecurity.models.PersonDetails;
+import com.mhealthkenya.hn.sehemusecurity.models.PersonVisiting;
+import com.mhealthkenya.hn.sehemusecurity.models.auth;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.mhealthkenya.hn.sehemusecurity.dependancies.AppController.TAG;
 
 
 public class AnnounceVisitorFragment extends Fragment {
 
+    @BindView(R.id.first_name)
+    TextInputEditText etxt_first_name;
+
+    @BindView(R.id.last_name)
+    TextInputEditText etxt_last_name;
+
+    @BindView(R.id.id_number)
+    TextInputEditText etxt_id_number;
+
+    @BindView(R.id.phone_number)
+    TextInputEditText etxt_phone_number;
+
+    @BindView(R.id.car_registraion)
+    TextInputEditText etxt_car_registraion;
+
+    @BindView(R.id.property_Spinner)
+    SearchableSpinner property_Spinner;
+
+    @BindView(R.id.personVisiting_Spinner)
+    SearchableSpinner personVisiting_Spinner;
+
+    @BindView(R.id.btn_submit)
+    MaterialButton btn_submit;
+
     private Unbinder unbinder;
     private View root;
     private Context context;
+
+    private auth loggedInUser;
+
+    private int organizationID = 0;
+    private int personID = 0;
+
+    ArrayList<String> organizationList;
+    ArrayList<Organization> organizations;
+
+    ArrayList<String> personList;
+    ArrayList<PersonVisiting> person;
 
     public void onAttach(Context ctx) {
         super.onAttach(ctx);
@@ -39,8 +103,350 @@ public class AnnounceVisitorFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_announce_visitor, container, false);
         unbinder = ButterKnife.bind(this, root);
 
+        loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
+
+        property_Spinner.setTitle("Select Organisation visiting ");
+        property_Spinner.setPositiveButton("OK");
+
+        personVisiting_Spinner.setTitle("Select the person visiting");
+        personVisiting_Spinner.setPositiveButton("OK");
+
+        getProperty();
+
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                walkinVisit();
+
+            }
+        });
+
         return root;
     }
+
+    private void walkinVisit(){
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("first_name", etxt_first_name.getText().toString());
+            jsonObject.put("last_name", etxt_last_name.getText().toString());
+            jsonObject.put("organization_id", organizationID);
+            jsonObject.put("person_visit", personID);
+            jsonObject.put("national_id", etxt_id_number.getText().toString());
+            jsonObject.put("msisdn", etxt_phone_number.getText().toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String auth_token = loggedInUser.getAuth_token();
+
+        AndroidNetworking.post(Constants.ENDPOINT+Constants.WALKIN_VISIT)
+                .addHeaders("Authorization","Token "+ auth_token)
+                .addHeaders("Content-Type", "application.json")
+                .addHeaders("Accept", "*/*")
+                .addHeaders("Accept", "gzip, deflate, br")
+                .addHeaders("Connection","keep-alive")
+                .addJSONObjectBody(jsonObject) // posting json
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // do anything with response
+
+//                        Log.e(TAG, response.toString());
+
+                        try {
+
+                            boolean  status = response.has("success") && response.getBoolean("success");
+                            String  message = response.has("message") ? response.getString("message") : "" ;
+                            String  errors = response.has("errors") ? response.getString("errors") : "" ;
+
+                            if (status){
+
+                                NavHostFragment.findNavController(AnnounceVisitorFragment.this).navigate(R.id.nav_home);
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                            }else{
+
+                                Toast.makeText(context, errors, Toast.LENGTH_SHORT).show();
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+//                        Log.e(TAG, error.getErrorBody());
+
+                        Snackbar.make(root.findViewById(R.id.frag_announce_visitor), "" + error.getErrorBody(), Snackbar.LENGTH_LONG).show();
+                    }
+                });
+
+
+    }
+
+    private void getProperty() {
+
+        String auth_token = loggedInUser.getAuth_token();
+
+        AndroidNetworking.get(Constants.ENDPOINT+Constants.ORGANIZATION)
+                .addHeaders("Authorization","Token "+ auth_token)
+                .addHeaders("Content-Type", "application.json")
+                .addHeaders("Accept", "*/*")
+                .addHeaders("Accept", "gzip, deflate, br")
+                .addHeaders("Connection","keep-alive")
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // do anything with response
+                        Log.e(TAG, response.toString());
+
+                        try {
+
+                            boolean  status = response.has("success") && response.getBoolean("success");
+                            String  message = response.has("message") ? response.getString("message") : "" ;
+                            String  errors = response.has("errors") ? response.getString("errors") : "" ;
+
+
+                            organizations = new ArrayList<Organization>();
+                            organizationList = new ArrayList<String>();
+
+                            organizations.clear();
+                            organizationList.clear();
+
+                            if (status){
+
+                                JSONArray jsonArray = response.getJSONArray("data");
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject facility = (JSONObject) jsonArray.get(i);
+
+                                    int id = facility.has("id") ? facility.getInt("id") : 0;
+                                    String uuid = facility.has("uuid") ? facility.getString("uuid") : "";
+                                    String name = facility.has("name") ? facility.getString("name") : "";
+                                    String logo = facility.has("logo") ? facility.getString("logo") : "";
+                                    String floor = facility.has("floor") ? facility.getString("floor") : "";
+                                    String extra_info = facility.has("extra_info") ? facility.getString("extra_info") : "";
+                                    String created_at = facility.has("created_at") ? facility.getString("created_at") : "";
+                                    String updated_at = facility.has("updated_at") ? facility.getString("updated_at") : "";
+                                    int unit_id = facility.has("unit_id") ? facility.getInt("unit_id") : 0;
+                                    int created_by = facility.has("created_by") ? facility.getInt("created_by") : 0;
+                                    String updated_by = facility.has("updated_by") ? facility.getString("updated_by") : "";
+
+
+                                    Organization newOrganization = new Organization(id,uuid,name,logo,floor,extra_info,created_at,updated_at,unit_id,created_by,updated_by);
+
+                                    organizations.add(newOrganization);
+                                    organizationList.add(newOrganization.getName());
+                                }
+
+
+                                organizations.add(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
+                                organizationList.add("Select your Organization.");
+
+                                ArrayAdapter<String> aa=new ArrayAdapter<String>(context,
+                                        android.R.layout.simple_spinner_dropdown_item,
+                                        organizationList){
+                                    @Override
+                                    public int getCount() {
+                                        return super.getCount(); // you don't display last item. It is used as hint.
+                                    }
+                                };
+
+                                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                                if (property_Spinner != null){
+                                    property_Spinner.setAdapter(aa);
+                                    property_Spinner.setSelection(organizationID-1);
+
+                                    organizationID = organizations.get(aa.getCount()-1).getId();
+
+                                    property_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                                            organizationID = organizations.get(position).getId();
+
+                                            if (organizationID !=0){
+
+                                                getPersonVisiting(organizationID);
+
+                                            }
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                        }
+                                    });
+
+                                }
+
+                            } else{
+
+                                Snackbar.make(root.findViewById(R.id.frag_announce_visitor), errors, Snackbar.LENGTH_LONG).show();
+
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                            Snackbar.make(root.findViewById(R.id.frag_announce_visitor), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+
+
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+
+                        Log.e(TAG, String.valueOf(error.getErrorCode()));
+
+                    }
+                });
+    }
+
+    private void getPersonVisiting(int organizationID) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("organization_id", organizationID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String auth_token = loggedInUser.getAuth_token();
+
+        AndroidNetworking.post(Constants.ENDPOINT+Constants.PERSON_VISITING)
+                .addHeaders("Authorization","Token "+ auth_token)
+                .addHeaders("Content-Type", "application.json")
+                .addHeaders("Accept", "*/*")
+                .addHeaders("Accept", "gzip, deflate, br")
+                .addHeaders("Connection","keep-alive")
+                .addJSONObjectBody(jsonObject) // posting json
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // do anything with response
+                        Log.e(TAG, response.toString());
+
+                        try {
+
+                            boolean  status = response.has("success") && response.getBoolean("success");
+                            String  message = response.has("message") ? response.getString("message") : "" ;
+                            String  errors = response.has("errors") ? response.getString("errors") : "" ;
+
+
+                            person = new ArrayList<PersonVisiting>();
+                            personList = new ArrayList<String>();
+
+                            person.clear();
+                            personList.clear();
+
+                            JSONArray jsonArray = response.getJSONArray("");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject personObj = (JSONObject) jsonArray.get(i);
+
+                                int id = personObj.has("id") ? personObj.getInt("id") : 0;
+                                JSONObject myObject = personObj.getJSONObject("user");
+
+                                String first_name = myObject.has("first_name") ? myObject.getString("first_name") : "";
+                                String last_name = myObject.has("last_name") ? myObject.getString("last_name") : "";
+                                String email = myObject.has("email") ? myObject.getString("email") : "";
+                                String msisdn = myObject.has("msisdn") ? myObject.getString("msisdn") : "";
+
+                                PersonDetails newPerson = new PersonDetails(first_name,last_name,email,msisdn);
+
+                                String uuid = personObj.has("uuid") ? personObj.getString("uuid") : "";
+                                String created_at = personObj.has("created_at") ? personObj.getString("created_at") : "";
+                                String updated_at = personObj.has("updated_at") ? personObj.getString("updated_at") : "";
+                                int organization = personObj.has("unit_id") ? personObj.getInt("unit_id") : 0;
+                                int created_by = personObj.has("created_by") ? personObj.getInt("created_by") : 0;
+                                int updated_by = personObj.has("updated_by") ? personObj.getInt("updated_by") : 0;
+
+
+                                PersonVisiting newPersonVisiting = new PersonVisiting(id,myObject,uuid,created_at,updated_at,organization,created_by,updated_by);
+
+                                person.add(newPersonVisiting);
+                                personList.add(newPerson.getFirst_name() + newPerson.getLast_name());
+                            }
+
+
+                            personList.add("Select the person visiting.");
+
+                            ArrayAdapter<String> aa=new ArrayAdapter<String>(context,
+                                    android.R.layout.simple_spinner_dropdown_item,
+                                    personList){
+                                @Override
+                                public int getCount() {
+                                    return super.getCount(); // you don't display last item. It is used as hint.
+                                }
+                            };
+
+                            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                            if (personVisiting_Spinner != null){
+                                personVisiting_Spinner.setAdapter(aa);
+                                personVisiting_Spinner.setSelection(personID-1);
+
+                                personID = organizations.get(aa.getCount()-1).getId();
+
+                                personVisiting_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                                        personID = person.get(position).getId();
+
+
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                    }
+                                });
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                            Snackbar.make(root.findViewById(R.id.frag_announce_visitor), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+
+
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+
+                        Log.e(TAG, error.getErrorBody());
+
+                    }
+                });
+    }
+
 
     @Override
     public void onDestroyView() {
