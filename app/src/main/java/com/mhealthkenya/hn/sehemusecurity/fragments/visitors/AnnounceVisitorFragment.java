@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.fxn.stash.Stash;
 import com.google.android.material.button.MaterialButton;
@@ -255,6 +256,10 @@ public class AnnounceVisitorFragment extends Fragment {
                                 organizations.add(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
                                 organizationList.add("Select your Organization.");
 
+                                int pos =organizations.indexOf(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
+                                if (pos >= organizationID)
+                                    pos=0;
+
                                 ArrayAdapter<String> aa=new ArrayAdapter<String>(context,
                                         android.R.layout.simple_spinner_dropdown_item,
                                         organizationList){
@@ -268,19 +273,26 @@ public class AnnounceVisitorFragment extends Fragment {
 
                                 if (property_Spinner != null){
                                     property_Spinner.setAdapter(aa);
-                                    property_Spinner.setSelection(organizationID-1);
+                                    property_Spinner.setSelection(pos);
 
-                                    organizationID = organizations.get(aa.getCount()-1).getId();
+//                                    organizationID = organizations.get(aa.getCount()-1).getId();
 
                                     property_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                                            personVisiting_Spinner.setAdapter(null);
 
                                             organizationID = organizations.get(position).getId();
 
                                             if (organizationID !=0){
 
                                                 getPersonVisiting(organizationID);
+
+                                            }
+                                            else {
+
+                                                Toast.makeText(context, "Error Loading...", Toast.LENGTH_SHORT).show();
 
                                             }
 
@@ -319,15 +331,17 @@ public class AnnounceVisitorFragment extends Fragment {
 
                         Log.e(TAG, String.valueOf(error.getErrorCode()));
 
+                        Snackbar.make(root.findViewById(R.id.frag_announce_visitor), error.getErrorDetail(), Snackbar.LENGTH_LONG).show();
+
                     }
                 });
     }
 
-    private void getPersonVisiting(int organizationID) {
+    private void getPersonVisiting(int orgId) {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("organization_id", organizationID);
+            jsonObject.put("organization_id", orgId);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -342,20 +356,15 @@ public class AnnounceVisitorFragment extends Fragment {
                 .addHeaders("Accept", "gzip, deflate, br")
                 .addHeaders("Connection","keep-alive")
                 .addJSONObjectBody(jsonObject) // posting json
-                .setPriority(Priority.LOW)
+                .setPriority(Priority.HIGH)
                 .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
+                .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        // do anything with response
+                    public void onResponse(JSONArray response) {
+
                         Log.e(TAG, response.toString());
 
                         try {
-
-                            boolean  status = response.has("success") && response.getBoolean("success");
-                            String  message = response.has("message") ? response.getString("message") : "" ;
-                            String  errors = response.has("errors") ? response.getString("errors") : "" ;
-
 
                             person = new ArrayList<PersonVisiting>();
                             personList = new ArrayList<String>();
@@ -363,37 +372,36 @@ public class AnnounceVisitorFragment extends Fragment {
                             person.clear();
                             personList.clear();
 
-                            JSONArray jsonArray = response.getJSONArray("");
+                            JSONObject jsonObject = response.getJSONObject(0);
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject personObj = (JSONObject) jsonArray.get(i);
+                            int id = jsonObject.has("id") ? jsonObject.getInt("id") : 0;
+                            JSONObject myObject = jsonObject.getJSONObject("user");
 
-                                int id = personObj.has("id") ? personObj.getInt("id") : 0;
-                                JSONObject myObject = personObj.getJSONObject("user");
+                            String first_name = myObject.has("first_name") ? myObject.getString("first_name") : "";
+                            String last_name = myObject.has("last_name") ? myObject.getString("last_name") : "";
+                            String email = myObject.has("email") ? myObject.getString("email") : "";
+                            String msisdn = myObject.has("msisdn") ? myObject.getString("msisdn") : "";
 
-                                String first_name = myObject.has("first_name") ? myObject.getString("first_name") : "";
-                                String last_name = myObject.has("last_name") ? myObject.getString("last_name") : "";
-                                String email = myObject.has("email") ? myObject.getString("email") : "";
-                                String msisdn = myObject.has("msisdn") ? myObject.getString("msisdn") : "";
+                            PersonDetails newPerson = new PersonDetails(first_name,last_name,email,msisdn);
 
-                                PersonDetails newPerson = new PersonDetails(first_name,last_name,email,msisdn);
+                            String uuid = jsonObject.has("uuid") ? jsonObject.getString("uuid") : "";
+                            String created_at = jsonObject.has("created_at") ? jsonObject.getString("created_at") : "";
+                            String updated_at = jsonObject.has("updated_at") ? jsonObject.getString("updated_at") : "";
+                            int organization = jsonObject.has("unit_id") ? jsonObject.getInt("unit_id") : 0;
+                            int created_by = jsonObject.has("created_by") ? jsonObject.getInt("created_by") : 0;
+                            String updated_by = jsonObject.has("updated_by") ? jsonObject.getString("updated_by") : "";
 
-                                String uuid = personObj.has("uuid") ? personObj.getString("uuid") : "";
-                                String created_at = personObj.has("created_at") ? personObj.getString("created_at") : "";
-                                String updated_at = personObj.has("updated_at") ? personObj.getString("updated_at") : "";
-                                int organization = personObj.has("unit_id") ? personObj.getInt("unit_id") : 0;
-                                int created_by = personObj.has("created_by") ? personObj.getInt("created_by") : 0;
-                                int updated_by = personObj.has("updated_by") ? personObj.getInt("updated_by") : 0;
+                            PersonVisiting newPersonVisiting = new PersonVisiting(id,myObject,uuid,created_at,updated_at,organization,created_by,updated_by);
 
+                            person.add(newPersonVisiting);
+                            personList.add(newPerson.getFirst_name()+" " + newPerson.getLast_name());
 
-                                PersonVisiting newPersonVisiting = new PersonVisiting(id,myObject,uuid,created_at,updated_at,organization,created_by,updated_by);
-
-                                person.add(newPersonVisiting);
-                                personList.add(newPerson.getFirst_name() + newPerson.getLast_name());
-                            }
-
-
+                            person.add(new PersonVisiting(0,myObject,"Select your Organization.","--select--","--select--",0,0,"--select--"));
                             personList.add("Select the person visiting.");
+
+                            int pos =person.indexOf(new PersonVisiting(0,myObject,"Select your Organization.","--select--","--select--",0,0,"--select--"));
+                            if (pos > personID)
+                                pos=0;
 
                             ArrayAdapter<String> aa=new ArrayAdapter<String>(context,
                                     android.R.layout.simple_spinner_dropdown_item,
@@ -406,18 +414,15 @@ public class AnnounceVisitorFragment extends Fragment {
 
                             aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                            if (personVisiting_Spinner != null){
+                            if (personVisiting_Spinner != null) {
                                 personVisiting_Spinner.setAdapter(aa);
-                                personVisiting_Spinner.setSelection(personID-1);
-
-                                personID = organizations.get(aa.getCount()-1).getId();
+                                personVisiting_Spinner.setSelection(pos);
 
                                 personVisiting_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
                                         personID = person.get(position).getId();
-
 
                                     }
 
@@ -426,25 +431,36 @@ public class AnnounceVisitorFragment extends Fragment {
 
                                     }
                                 });
-
                             }
+
+                           /* for (int i = 0; i < jsonObject.length(); i++) {
+
+
+
+                            }*/
 
                         } catch (JSONException e) {
                             e.printStackTrace();
 
                             Snackbar.make(root.findViewById(R.id.frag_announce_visitor), e.getMessage(), Snackbar.LENGTH_LONG).show();
+
+
                         }
 
-
                     }
+
                     @Override
-                    public void onError(ANError error) {
+                    public void onError(ANError anError) {
+
                         // handle error
 
-                        Log.e(TAG, error.getErrorBody());
+                        Log.e(TAG, String.valueOf(anError.getErrorCode()));
+
+                        Toast.makeText(context, anError.getErrorBody(), Toast.LENGTH_SHORT).show();
 
                     }
                 });
+
     }
 
 

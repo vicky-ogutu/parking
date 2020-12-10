@@ -10,10 +10,10 @@ public class PersonVisiting {
     private String updated_at;
     private int organization;
     private int created_by;
-    private int updated_by;
+    private String updated_by;
 
 
-    public PersonVisiting(int id, JSONObject PersonDetails, String uuid, String created_at, String updated_at, int organization, int created_by, int updated_by) {
+    public PersonVisiting(int id, JSONObject PersonDetails, String uuid, String created_at, String updated_at, int organization, int created_by, String updated_by) {
         this.id = id;
         this.PersonDetails = PersonDetails;
         this.uuid = uuid;
@@ -80,11 +80,11 @@ public class PersonVisiting {
         this.created_by = created_by;
     }
 
-    public int getUpdated_by() {
+    public String getUpdated_by() {
         return updated_by;
     }
 
-    public void setUpdated_by(int updated_by) {
+    public void setUpdated_by(String updated_by) {
         this.updated_by = updated_by;
     }
 

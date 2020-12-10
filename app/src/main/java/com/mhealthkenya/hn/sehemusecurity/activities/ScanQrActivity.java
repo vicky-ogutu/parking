@@ -49,6 +49,8 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
 
     private auth loggedInUser;
 
+    private String scanResult = "";
+
 
 
     @Override
@@ -180,7 +182,7 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
 
     @Override
     public void handleResult(Result result) {
-        final String scanResult = result.getText();
+        scanResult = result.getText();
 
         Log.e(TAG, scanResult);
 
@@ -256,10 +258,6 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
 
 //                                Toast.makeText(ScanQrActivity.this, "Visitor Announced!", Toast.LENGTH_LONG).show();
 
-                            }else if (!status && message.contains("Visit date is")){
-
-                                Toast.makeText(ScanQrActivity.this, message, Toast.LENGTH_SHORT).show();
-
                             }
                             else{
 
@@ -287,6 +285,54 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
                         }
 
                         Log.e(TAG, error.getErrorBody());
+
+                        if (error.getErrorBody().contains("Invalid QR")){
+
+                            AlertDialog.Builder builder= new AlertDialog.Builder(ScanQrActivity.this);
+                            builder.setTitle("Error");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent mint = new Intent(ScanQrActivity.this, MainActivity.class);
+                                    startActivity(mint);
+                                }
+                            });
+                            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    scannerView.resumeCameraPreview(ScanQrActivity.this);
+                                    verifyQR(scanResult);
+
+                                }
+                            });
+                            builder.setMessage("Invalid QR Code.");
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
+                        }
+                        else if (error.getErrorBody().contains("Visit date is")){
+
+                            AlertDialog.Builder builder= new AlertDialog.Builder(ScanQrActivity.this);
+                            builder.setTitle("Error");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent mint = new Intent(ScanQrActivity.this, MainActivity.class);
+                                    startActivity(mint);
+                                }
+                            });
+                            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    scannerView.resumeCameraPreview(ScanQrActivity.this);
+
+                                }
+                            });
+                            builder.setMessage(error.getErrorBody());
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
+                        } else
 
                         Toast.makeText(ScanQrActivity.this, ""+error.getErrorBody(), Toast.LENGTH_SHORT).show();
 

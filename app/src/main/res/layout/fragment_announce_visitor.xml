@@ -114,7 +114,7 @@
                             android:layout_margin="@dimen/spacing_xsmall"
                             android:inputType="phone"
                             android:maxLines="1"
-                            android:maxLength="20"
+                            android:maxLength="10"
                             android:hint="Phone Number" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -131,7 +131,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Car Registration."
-                            android:inputType="textCapWords" />
+                            android:inputType="textCapCharacters" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
