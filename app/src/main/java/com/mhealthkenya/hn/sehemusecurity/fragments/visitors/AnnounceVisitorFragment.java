@@ -372,34 +372,39 @@ public class AnnounceVisitorFragment extends Fragment {
                             person.clear();
                             personList.clear();
 
-                            JSONObject jsonObject = response.getJSONObject(0);
+                            for (int i = 0; i < response.length(); i++) {
 
-                            int id = jsonObject.has("id") ? jsonObject.getInt("id") : 0;
-                            JSONObject myObject = jsonObject.getJSONObject("user");
+                                JSONObject jsonObject = (JSONObject) response.get(i);
 
-                            String first_name = myObject.has("first_name") ? myObject.getString("first_name") : "";
-                            String last_name = myObject.has("last_name") ? myObject.getString("last_name") : "";
-                            String email = myObject.has("email") ? myObject.getString("email") : "";
-                            String msisdn = myObject.has("msisdn") ? myObject.getString("msisdn") : "";
+                                int id = jsonObject.has("id") ? jsonObject.getInt("id") : 0;
+                                JSONObject myObject = jsonObject.getJSONObject("user");
 
-                            PersonDetails newPerson = new PersonDetails(first_name,last_name,email,msisdn);
+                                String first_name = myObject.has("first_name") ? myObject.getString("first_name") : "";
+                                String last_name = myObject.has("last_name") ? myObject.getString("last_name") : "";
+                                String email = myObject.has("email") ? myObject.getString("email") : "";
+                                String msisdn = myObject.has("msisdn") ? myObject.getString("msisdn") : "";
 
-                            String uuid = jsonObject.has("uuid") ? jsonObject.getString("uuid") : "";
-                            String created_at = jsonObject.has("created_at") ? jsonObject.getString("created_at") : "";
-                            String updated_at = jsonObject.has("updated_at") ? jsonObject.getString("updated_at") : "";
-                            int organization = jsonObject.has("unit_id") ? jsonObject.getInt("unit_id") : 0;
-                            int created_by = jsonObject.has("created_by") ? jsonObject.getInt("created_by") : 0;
-                            String updated_by = jsonObject.has("updated_by") ? jsonObject.getString("updated_by") : "";
+                                PersonDetails newPerson = new PersonDetails(first_name,last_name,email,msisdn);
 
-                            PersonVisiting newPersonVisiting = new PersonVisiting(id,myObject,uuid,created_at,updated_at,organization,created_by,updated_by);
+                                String uuid = jsonObject.has("uuid") ? jsonObject.getString("uuid") : "";
+                                String created_at = jsonObject.has("created_at") ? jsonObject.getString("created_at") : "";
+                                String updated_at = jsonObject.has("updated_at") ? jsonObject.getString("updated_at") : "";
+                                int organization = jsonObject.has("unit_id") ? jsonObject.getInt("unit_id") : 0;
+                                int created_by = jsonObject.has("created_by") ? jsonObject.getInt("created_by") : 0;
+                                String updated_by = jsonObject.has("updated_by") ? jsonObject.getString("updated_by") : "";
 
-                            person.add(newPersonVisiting);
-                            personList.add(newPerson.getFirst_name()+" " + newPerson.getLast_name());
+                                PersonVisiting newPersonVisiting = new PersonVisiting(id,"",uuid,created_at,updated_at,organization,created_by,updated_by);
 
-                            person.add(new PersonVisiting(0,myObject,"Select your Organization.","--select--","--select--",0,0,"--select--"));
-                            personList.add("Select the person visiting.");
+                                person.add(newPersonVisiting);
+                                personList.add(newPerson.getFirst_name()+" " + newPerson.getLast_name());
 
-                            int pos =person.indexOf(new PersonVisiting(0,myObject,"Select your Organization.","--select--","--select--",0,0,"--select--"));
+
+                            }
+
+                            organizations.add(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
+                            organizationList.add("Select your Organization.");
+
+                            int pos =person.indexOf(new PersonVisiting(0,"Select your Organization","Select your Organization.","--select--","--select--",0,0,"--select--"));
                             if (pos > personID)
                                 pos=0;
 
@@ -433,11 +438,6 @@ public class AnnounceVisitorFragment extends Fragment {
                                 });
                             }
 
-                           /* for (int i = 0; i < jsonObject.length(); i++) {
-
-
-
-                            }*/
 
                         } catch (JSONException e) {
                             e.printStackTrace();

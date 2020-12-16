@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -23,11 +25,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.mhealthkenya.hn.sehemusecurity.R;
 import com.mhealthkenya.hn.sehemusecurity.dependancies.Constants;
+import com.mhealthkenya.hn.sehemusecurity.models.Organization;
 import com.mhealthkenya.hn.sehemusecurity.models.User;
 import com.mhealthkenya.hn.sehemusecurity.models.auth;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +48,9 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.card_name)
     MaterialTextView card_name;
 
+    @BindView(R.id.card_property)
+    MaterialTextView card_property;
+
     @BindView(R.id.card_phone)
     MaterialTextView card_phone;
 
@@ -53,6 +63,9 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.etxt_email)
     TextInputEditText etxt_email;
 
+    @BindView(R.id.property_Spinner)
+    SearchableSpinner property_Spinner;
+
     @BindView(R.id.btn_update_profile)
     MaterialButton btn_update_profile;
 
@@ -62,6 +75,11 @@ public class ProfileFragment extends Fragment {
     private Context context;
 
     private auth loggedInUser;
+
+    private int organizationID = 0;
+
+    ArrayList<String> organizationList;
+    ArrayList<Organization> organizations;
 
 
     public void onAttach(Context ctx) {
@@ -84,7 +102,11 @@ public class ProfileFragment extends Fragment {
 
         loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
 
-        loadCurrentUser();
+        property_Spinner.setTitle("Select your work place.");
+        property_Spinner.setPositiveButton("OK");
+
+        loadMyProfile();
+        getProperty();
 
         btn_update_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,12 +120,12 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
-    private void loadCurrentUser(){
+    private void loadMyProfile(){
 
         String auth_token = loggedInUser.getAuth_token();
 
 
-        AndroidNetworking.get(Constants.ENDPOINT+Constants.CURRENT_USER)
+        AndroidNetworking.get(Constants.ENDPOINT+Constants.MY_PROFILE)
                 .addHeaders("Authorization","Token "+ auth_token)
                 .addHeaders("Content-Type", "application.json")
                 .addHeaders("Accept", "*/*")
@@ -119,23 +141,38 @@ public class ProfileFragment extends Fragment {
 
                         try {
 
-                            int id = response.has("id") ? response.getInt("id") : 0;
-                            String first_name = response.has("first_name") ? response.getString("first_name") : "";
-                            String last_name = response.has("last_name") ? response.getString("last_name") : "";
-                            String email = response.has("email") ? response.getString("email") : "";
-                            String phone_no = response.has("msisdn") ? response.getString("msisdn") : "";
-                            String gender = response.has("gender") ? response.getString("gender") : "";
-                            int access_level = response.has("access_level") ? response.getInt("access_level") : 0;
+                            boolean  status = response.has("success") && response.getBoolean("success");
+                            String  message = response.has("message") ? response.getString("message") : "" ;
+                            String  errors = response.has("errors") ? response.getString("errors") : "" ;
+
+                            if (status){
+
+                                JSONObject myProfile = response.has("user") ? response.getJSONObject("user") : null ;
+
+                                int id = myProfile.has("id") ? myProfile.getInt("id") : 0;
+                                String first_name = myProfile.has("first_name") ? myProfile.getString("first_name") : "";
+                                String last_name = myProfile.has("last_name") ? myProfile.getString("last_name") : "";
+                                String email = myProfile.has("email") ? myProfile.getString("email") : "";
+                                String phone_no = myProfile.has("msisdn") ? myProfile.getString("msisdn") : "";
+                                String gender = myProfile.has("gender") ? myProfile.getString("gender") : "";
 
 
-                            User newUser = new User(id,first_name,last_name,email,phone_no,gender,access_level);
+                                JSONObject myProperty = response.has("Property") ? response.getJSONObject("Property") : null ;
+                                int idP = myProperty.has("id") ? myProperty.getInt("id") : 0;
+                                String name = myProperty.has("name") ? myProperty.getString("name") : "";
 
-                            card_name.setText(first_name+" "+last_name);
-                            card_phone.setText(phone_no);
 
-                            etxt_first_name.setText(first_name);
-                            etxt_last_name.setText(last_name);
-                            etxt_email.setText(email);
+                                card_name.setText(first_name+" "+last_name);
+                                card_phone.setText(phone_no);
+                                card_property.setText(name);
+
+                                etxt_first_name.setText(first_name);
+                                etxt_last_name.setText(last_name);
+                                etxt_email.setText(email);
+
+                                organizationID = idP;
+
+                            }
 
 
                         } catch (JSONException e) {
@@ -153,6 +190,146 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
+    }
+
+    private void getProperty() {
+
+        String auth_token = loggedInUser.getAuth_token();
+
+        AndroidNetworking.get(Constants.ENDPOINT+Constants.ORGANIZATION)
+                .addHeaders("Authorization","Token "+ auth_token)
+                .addHeaders("Content-Type", "application.json")
+                .addHeaders("Accept", "*/*")
+                .addHeaders("Accept", "gzip, deflate, br")
+                .addHeaders("Connection","keep-alive")
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // do anything with response
+                        Log.e(TAG, response.toString());
+
+                        try {
+
+                            boolean  status = response.has("success") && response.getBoolean("success");
+                            String  message = response.has("message") ? response.getString("message") : "" ;
+                            String  errors = response.has("errors") ? response.getString("errors") : "" ;
+
+
+                            organizations = new ArrayList<Organization>();
+                            organizationList = new ArrayList<String>();
+
+                            organizations.clear();
+                            organizationList.clear();
+
+                            if (status){
+
+                                JSONArray jsonArray = response.getJSONArray("data");
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject facility = (JSONObject) jsonArray.get(i);
+
+                                    int id = facility.has("id") ? facility.getInt("id") : 0;
+                                    String uuid = facility.has("uuid") ? facility.getString("uuid") : "";
+                                    String name = facility.has("name") ? facility.getString("name") : "";
+                                    String logo = facility.has("logo") ? facility.getString("logo") : "";
+                                    String floor = facility.has("floor") ? facility.getString("floor") : "";
+                                    String extra_info = facility.has("extra_info") ? facility.getString("extra_info") : "";
+                                    String created_at = facility.has("created_at") ? facility.getString("created_at") : "";
+                                    String updated_at = facility.has("updated_at") ? facility.getString("updated_at") : "";
+                                    int unit_id = facility.has("unit_id") ? facility.getInt("unit_id") : 0;
+                                    int created_by = facility.has("created_by") ? facility.getInt("created_by") : 0;
+                                    String updated_by = facility.has("updated_by") ? facility.getString("updated_by") : "";
+
+
+                                    Organization newOrganization = new Organization(id,uuid,name,logo,floor,extra_info,created_at,updated_at,unit_id,created_by,updated_by);
+
+                                    organizations.add(newOrganization);
+                                    organizationList.add(newOrganization.getName());
+                                }
+
+
+                                organizations.add(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
+                                organizationList.add("Select your Organization.");
+
+                                int pos =organizations.indexOf(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
+                                if (pos >= organizationID)
+                                    pos=0;
+
+                                ArrayAdapter<String> aa=new ArrayAdapter<String>(context,
+                                        android.R.layout.simple_spinner_dropdown_item,
+                                        organizationList){
+                                    @Override
+                                    public int getCount() {
+                                        return super.getCount(); // you don't display last item. It is used as hint.
+                                    }
+                                };
+
+                                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                                if (property_Spinner != null){
+                                    property_Spinner.setAdapter(aa);
+                                    property_Spinner.setSelection(organizationID);
+
+//                                    organizationID = organizations.get(aa.getCount()-1).getId();
+
+                                    property_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                                            organizationID = organizations.get(position).getId();
+
+                                            if (organizationID !=0){
+
+
+
+                                            }
+                                            else {
+
+                                                Toast.makeText(context, "Please select an organization...", Toast.LENGTH_SHORT).show();
+
+                                            }
+
+
+
+                                        }
+
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                        }
+                                    });
+
+                                }
+
+                            } else{
+
+                                Snackbar.make(root.findViewById(R.id.frag_announce_visitor), errors, Snackbar.LENGTH_LONG).show();
+
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                            Snackbar.make(root.findViewById(R.id.frag_announce_visitor), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+
+
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+
+                        Log.e(TAG, String.valueOf(error.getErrorCode()));
+
+                        Snackbar.make(root.findViewById(R.id.frag_announce_visitor), error.getErrorDetail(), Snackbar.LENGTH_LONG).show();
+
+                    }
+                });
     }
 
     private void updateUserDetails() {

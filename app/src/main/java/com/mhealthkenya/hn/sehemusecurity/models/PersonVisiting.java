@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class PersonVisiting {
     private int id;
-    private JSONObject PersonDetails;
+    private String PersonDetails;
     private String uuid;
     private String created_at;
     private String updated_at;
@@ -13,7 +13,7 @@ public class PersonVisiting {
     private String updated_by;
 
 
-    public PersonVisiting(int id, JSONObject PersonDetails, String uuid, String created_at, String updated_at, int organization, int created_by, String updated_by) {
+    public PersonVisiting(int id, String PersonDetails, String uuid, String created_at, String updated_at, int organization, int created_by, String updated_by) {
         this.id = id;
         this.PersonDetails = PersonDetails;
         this.uuid = uuid;
@@ -32,11 +32,11 @@ public class PersonVisiting {
         this.id = id;
     }
 
-    public JSONObject getPersonDetails() {
+    public String getPersonDetails() {
         return PersonDetails;
     }
 
-    public void PersonDetails(JSONObject PersonDetails) {
+    public void PersonDetails(String PersonDetails) {
         this.PersonDetails = PersonDetails;
     }
 

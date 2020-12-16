@@ -8,9 +8,11 @@ public class Constants {
 
     //AUTH
     public static String LOGIN = "api/security/login/";
+    public static String MY_PROFILE = "api/security/profile";
     public static String CURRENT_USER = "auth/users/me/";
     public static String UPDATE_USER = "auth/users/me/";
     public static String LOGOUT = "auth/token/logout/";
+
 
 
     //VISITS
