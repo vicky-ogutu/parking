@@ -401,10 +401,10 @@ public class AnnounceVisitorFragment extends Fragment {
 
                             }
 
-                            organizations.add(new Organization(0,"Select your Organization.","Select your Organization.","--select--","--select--","--select--","--select--","--select--",0,0,""));
-                            organizationList.add("Select your Organization.");
+                            person.add(new PersonVisiting(0,"Select the person you are visiting.","--select--","--select--","--select--",0,0,"--select--"));
+                            personList.add("Select the person you are visiting.");
 
-                            int pos =person.indexOf(new PersonVisiting(0,"Select your Organization","Select your Organization.","--select--","--select--",0,0,"--select--"));
+                            int pos =person.indexOf(new PersonVisiting(0,"Select the person you are visiting.","--select--","--select--","--select--",0,0,"--select--"));
                             if (pos > personID)
                                 pos=0;
 
