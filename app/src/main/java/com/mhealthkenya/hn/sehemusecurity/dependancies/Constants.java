@@ -21,6 +21,7 @@ public class Constants {
     public static String WALKIN_VISIT =  "api/visits/walkin/";
     public static String VERIFY_VISIT =  "api/visits/verify/";
     public static String ACTIVE_VISIT =  "api/security/active/visits/";
+    public static String END_VISIT =  "api/security/end/visits/";
 
 
     /*MODELS*/

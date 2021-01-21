@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.commercialVisitors.AnnounceCommercialVisitorFragment">
+    tools:context=".fragments.announceVisitors.AnnounceVisitorFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -180,6 +180,14 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/spacing_middle"
+                        android:text="Please select the place you are visiting."
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textStyle="bold" />
+
                     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                         android:id="@+id/property_Spinner"
                         android:layout_width="match_parent"
@@ -191,22 +199,13 @@
                         android:paddingRight="@dimen/spacing_large"
                         android:drawSelectorOnTop="true" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_marginHorizontal="@dimen/spacing_middle"
-                        android:layout_marginVertical="@dimen/spacing_middle"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/office_visiting"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Office Visiting"
-                            android:inputType="textCapWords" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Please select the person/house number you are visiting."
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textStyle="bold" />
 
 
                     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
@@ -219,24 +218,6 @@
                         android:paddingLeft="@dimen/spacing_large"
                         android:paddingRight="@dimen/spacing_large"
                         android:drawSelectorOnTop="true" />
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_marginHorizontal="@dimen/spacing_middle"
-                        android:layout_marginVertical="@dimen/spacing_middle"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/person_visiting"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Person Visiting"
-                            android:inputType="textCapWords" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_submit"

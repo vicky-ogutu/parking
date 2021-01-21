@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +19,38 @@ import android.widget.Toast;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.fxn.stash.Stash;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.mhealthkenya.hn.sehemusecurity.R;
+import com.mhealthkenya.hn.sehemusecurity.dependancies.Constants;
 import com.mhealthkenya.hn.sehemusecurity.dependancies.Tools;
 import com.mhealthkenya.hn.sehemusecurity.dependancies.ViewAnimation;
 import com.mhealthkenya.hn.sehemusecurity.models.ActiveVisit;
+import com.mhealthkenya.hn.sehemusecurity.models.auth;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mhealthkenya.hn.sehemusecurity.dependancies.AppController.TAG;
+
 public class ActiveVisitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<ActiveVisit> items = new ArrayList<>();
+    private List<ActiveVisit> items = new ArrayList<>();
 
+    private auth loggedInUser;
+    private View root;
     private Context context;
     private ActiveVisitAdapter.OnItemClickListener onItemClickListener;
 
@@ -130,8 +146,67 @@ public class ActiveVisitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View v) {
 
-                    Toast.makeText(context, "Visit Ended!", Toast.LENGTH_SHORT).show();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
 
+                        jsonObject.put("uid", obj.getUuid());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
+
+                    String auth_token = loggedInUser.getAuth_token();
+
+                    AndroidNetworking.post(Constants.ENDPOINT+Constants.END_VISIT)
+                            .addHeaders("Authorization","Token "+ auth_token)
+                            .addHeaders("Content-Type", "application.json")
+                            .addHeaders("Accept", "*/*")
+                            .addHeaders("Accept", "gzip, deflate, br")
+                            .addHeaders("Connection","keep-alive")
+                            .addJSONObjectBody(jsonObject) // posting json
+                            .setPriority(Priority.MEDIUM)
+                            .build()
+                            .getAsJSONObject(new JSONObjectRequestListener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    // do anything with response
+
+                        Log.e(TAG, response.toString());
+
+                                    try {
+
+                                        boolean  status = response.has("success") && response.getBoolean("success");
+                                        String  message = response.has("messages") ? response.getString("messages") : "" ;
+                                        String  errors = response.has("errors") ? response.getString("errors") : "" ;
+
+                                        if (status){
+
+                                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                            view.endVisit.setEnabled(false);
+
+                                        }else{
+
+                                            Toast.makeText(context, errors, Toast.LENGTH_SHORT).show();
+
+                                        }
+
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onError(ANError error) {
+                                    // handle error
+                        Log.e(TAG, error.getErrorBody());
+
+                                    Snackbar.make(root.findViewById(R.id.frag_active_visits), "" + error.getErrorBody(), Snackbar.LENGTH_LONG).show();
+                                }
+                            });
 
                 }
             });

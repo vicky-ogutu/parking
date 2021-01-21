@@ -1,4 +1,4 @@
-package com.mhealthkenya.hn.sehemusecurity.fragments.commercialVisitors;
+package com.mhealthkenya.hn.sehemusecurity.fragments.announceVisitors;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -26,7 +26,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mhealthkenya.hn.sehemusecurity.R;
 import com.mhealthkenya.hn.sehemusecurity.dependancies.Constants;
 import com.mhealthkenya.hn.sehemusecurity.models.Organization;
-import com.mhealthkenya.hn.sehemusecurity.models.PersonDetails;
 import com.mhealthkenya.hn.sehemusecurity.models.PersonVisiting;
 import com.mhealthkenya.hn.sehemusecurity.models.auth;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -44,7 +43,7 @@ import butterknife.Unbinder;
 import static com.mhealthkenya.hn.sehemusecurity.dependancies.AppController.TAG;
 
 
-public class AnnounceCommercialVisitorFragment extends Fragment {
+public class AnnounceVisitorFragment extends Fragment {
 
     @BindView(R.id.first_name)
     TextInputEditText etxt_first_name;
@@ -131,7 +130,6 @@ public class AnnounceCommercialVisitorFragment extends Fragment {
         try {
             jsonObject.put("first_name", etxt_first_name.getText().toString());
             jsonObject.put("last_name", etxt_last_name.getText().toString());
-            jsonObject.put("organization_id", organizationID);
             jsonObject.put("person_visit", personID);
             jsonObject.put("national_id", etxt_id_number.getText().toString());
             jsonObject.put("msisdn", etxt_phone_number.getText().toString());
@@ -156,7 +154,7 @@ public class AnnounceCommercialVisitorFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         // do anything with response
 
-//                        Log.e(TAG, response.toString());
+                        Log.e(TAG, response.toString());
 
                         try {
 
@@ -166,7 +164,7 @@ public class AnnounceCommercialVisitorFragment extends Fragment {
 
                             if (status){
 
-                                NavHostFragment.findNavController(AnnounceCommercialVisitorFragment.this).navigate(R.id.nav_home);
+                                NavHostFragment.findNavController(AnnounceVisitorFragment.this).navigate(R.id.nav_home);
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
                             }else{
@@ -185,7 +183,8 @@ public class AnnounceCommercialVisitorFragment extends Fragment {
                     @Override
                     public void onError(ANError error) {
                         // handle error
-//                        Log.e(TAG, error.getErrorBody());
+                        Log.e(TAG, error.getErrorBody());
+                        Log.e(TAG, String.valueOf(error.getErrorCode()));
 
                         Snackbar.make(root.findViewById(R.id.frag_announce_visitor), "" + error.getErrorBody(), Snackbar.LENGTH_LONG).show();
                     }
@@ -376,26 +375,19 @@ public class AnnounceCommercialVisitorFragment extends Fragment {
                                 JSONObject jsonObject = (JSONObject) response.get(i);
 
                                 int id = jsonObject.has("id") ? jsonObject.getInt("id") : 0;
-                                JSONObject myObject = jsonObject.getJSONObject("user");
-
-                                String first_name = myObject.has("first_name") ? myObject.getString("first_name") : "";
-                                String last_name = myObject.has("last_name") ? myObject.getString("last_name") : "";
-                                String email = myObject.has("email") ? myObject.getString("email") : "";
-                                String msisdn = myObject.has("msisdn") ? myObject.getString("msisdn") : "";
-
-                                PersonDetails newPerson = new PersonDetails(first_name,last_name,email,msisdn);
-
                                 String uuid = jsonObject.has("uuid") ? jsonObject.getString("uuid") : "";
+                                String name = jsonObject.has("name") ? jsonObject.getString("name") : "";
                                 String created_at = jsonObject.has("created_at") ? jsonObject.getString("created_at") : "";
                                 String updated_at = jsonObject.has("updated_at") ? jsonObject.getString("updated_at") : "";
                                 int organization = jsonObject.has("unit_id") ? jsonObject.getInt("unit_id") : 0;
                                 int created_by = jsonObject.has("created_by") ? jsonObject.getInt("created_by") : 0;
                                 String updated_by = jsonObject.has("updated_by") ? jsonObject.getString("updated_by") : "";
 
-                                PersonVisiting newPersonVisiting = new PersonVisiting(id,"",uuid,created_at,updated_at,organization,created_by,updated_by);
+                                PersonVisiting newPersonVisiting = new PersonVisiting(id,name,uuid,created_at,updated_at,organization,created_by,updated_by);
 
                                 person.add(newPersonVisiting);
-                                personList.add(newPerson.getFirst_name()+" " + newPerson.getLast_name());
+                                personList.add(newPersonVisiting.getPersonName());
+
 
 
                             }

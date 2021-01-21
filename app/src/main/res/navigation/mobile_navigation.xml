@@ -17,7 +17,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/nav_announce_visitor"
-        android:name="com.mhealthkenya.hn.sehemusecurity.fragments.commercialVisitors.AnnounceCommercialVisitorFragment"
+        android:name="com.mhealthkenya.hn.sehemusecurity.fragments.announceVisitors.AnnounceVisitorFragment"
         android:label="@string/announce_visitor"
         tools:layout="@layout/fragment_announce_visitor" />
     <activity
