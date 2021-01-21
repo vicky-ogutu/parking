@@ -17,14 +17,19 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/nav_announce_visitor"
-        android:name="com.mhealthkenya.hn.sehemusecurity.fragments.visitors.AnnounceVisitorFragment"
-        android:label="Announce Visitor"
+        android:name="com.mhealthkenya.hn.sehemusecurity.fragments.commercialVisitors.AnnounceCommercialVisitorFragment"
+        android:label="@string/announce_visitor"
         tools:layout="@layout/fragment_announce_visitor" />
     <activity
         android:id="@+id/nav_verify_visitor"
         android:name="com.mhealthkenya.hn.sehemusecurity.activities.ScanQrActivity"
-        android:label="Verify Visitor"
+        android:label="@string/verify_visitor"
         tools:layout="@layout/activity_scan_qr" />
+    <fragment
+        android:id="@+id/nav_active_visits"
+        android:name="com.mhealthkenya.hn.sehemusecurity.fragments.ActiveVisitsFragment"
+        android:label="@string/active_visits"
+        tools:layout="@layout/fragment_active_visits" />
 
 
 </navigation>

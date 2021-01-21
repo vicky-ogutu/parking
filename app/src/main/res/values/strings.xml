@@ -29,4 +29,7 @@
     <string name="vehicle_reg">Vehicle Registration</string>
     <string name="time">Time of Visit</string>
     <string name="person_visiting">Person Visiting</string>
+    <string name="announce_visitor">Announce Visitor</string>
+    <string name="verify_visitor">Verify Visitor</string>
+    <string name="active_visits">Active Visits</string>
 </resources>

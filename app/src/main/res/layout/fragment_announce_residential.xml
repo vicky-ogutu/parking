@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frag_announce_visitor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.commercialVisitors.AnnounceCommercialVisitorFragment">
+    tools:context=".fragments.residentialVisitors.AnnounceResidentialFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -256,5 +255,6 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

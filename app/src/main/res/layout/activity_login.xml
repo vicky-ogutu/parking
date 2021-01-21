@@ -120,6 +120,21 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/spacing_mlarge" />
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_forgot_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|end"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:clickable="true"
+                    android:text="Forgot Password ?"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_mlarge" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_sign_in"
                     android:layout_width="match_parent"

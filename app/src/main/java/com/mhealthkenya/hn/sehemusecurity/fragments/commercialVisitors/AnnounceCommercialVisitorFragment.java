@@ -1,4 +1,4 @@
-package com.mhealthkenya.hn.sehemusecurity.fragments.visitors;
+package com.mhealthkenya.hn.sehemusecurity.fragments.commercialVisitors;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -25,7 +25,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mhealthkenya.hn.sehemusecurity.R;
 import com.mhealthkenya.hn.sehemusecurity.dependancies.Constants;
-import com.mhealthkenya.hn.sehemusecurity.fragments.ProfileFragment;
 import com.mhealthkenya.hn.sehemusecurity.models.Organization;
 import com.mhealthkenya.hn.sehemusecurity.models.PersonDetails;
 import com.mhealthkenya.hn.sehemusecurity.models.PersonVisiting;
@@ -45,7 +44,7 @@ import butterknife.Unbinder;
 import static com.mhealthkenya.hn.sehemusecurity.dependancies.AppController.TAG;
 
 
-public class AnnounceVisitorFragment extends Fragment {
+public class AnnounceCommercialVisitorFragment extends Fragment {
 
     @BindView(R.id.first_name)
     TextInputEditText etxt_first_name;
@@ -167,7 +166,7 @@ public class AnnounceVisitorFragment extends Fragment {
 
                             if (status){
 
-                                NavHostFragment.findNavController(AnnounceVisitorFragment.this).navigate(R.id.nav_home);
+                                NavHostFragment.findNavController(AnnounceCommercialVisitorFragment.this).navigate(R.id.nav_home);
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
                             }else{

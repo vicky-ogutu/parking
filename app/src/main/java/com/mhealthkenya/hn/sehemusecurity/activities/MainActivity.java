@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -37,6 +39,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static  com.mhealthkenya.hn.sehemusecurity.dependancies.AppController.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_announce_visitor,R.id.nav_verify_visitor,R.id.nav_profile)
+                R.id.nav_home, R.id.nav_announce_visitor,R.id.nav_verify_visitor, R.id.nav_active_visits,R.id.nav_profile)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -154,15 +158,86 @@ public class MainActivity extends AppCompatActivity {
 
     public void logout(){
 
-        String endPoint = Stash.getString(Constants.AUTH_TOKEN);
-        Stash.put(Constants.AUTH_TOKEN, endPoint);
-        Stash.clearAll();
+        AndroidNetworking.post(Constants.ENDPOINT+Constants.LOGOUT)
+                .addHeaders("Authorization","Token "+ auth)
+                .addHeaders("Content-Type", "application.json")
+                .addHeaders("Accept", "*/*")
+                .addHeaders("Accept", "gzip, deflate, br")
+                .addHeaders("Connection","keep-alive")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // do anything with response
+
+                        Log.e(TAG, response.toString());
 
 
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+
+                        try {
+                            boolean  status = response.has("success") && response.getBoolean("success");
+                            String error = response.has("error") ? response.getString("error") : "";
+                            String message = response.has("message") ? response.getString("message") : "";
+
+                            if (status){
+
+                                String endPoint = Stash.getString(Constants.AUTH_TOKEN);
+                                Stash.clearAll();
+                                Stash.put(Constants.AUTH_TOKEN, endPoint);
+
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+
+
+                            }else if (!status){
+
+                                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+
+                            }
+                            else{
+
+
+                                Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+                        Log.e(TAG, String.valueOf(error.getErrorCode()));
+
+
+                        if (error.getErrorCode() == 0){
+
+                            String endPoint = Stash.getString(Constants.AUTH_TOKEN);
+                            Stash.clearAll();
+                            Stash.put(Constants.AUTH_TOKEN, endPoint);
+
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+
+                        }
+                        else{
+
+                            Toast.makeText(MainActivity.this, ""+error.getErrorBody(), Toast.LENGTH_SHORT).show();
+
+
+                        }
+
+                    }
+                });
 
     }
 

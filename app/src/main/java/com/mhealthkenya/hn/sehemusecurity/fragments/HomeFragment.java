@@ -41,6 +41,9 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.announceVisitorLayout)
     CardView announceVisitorLayout;
 
+    @BindView(R.id.activeVisitsLayout)
+    CardView activeVisitsLayout;
+
     @BindView(R.id.myProfileLayout)
     CardView myProfileLayout;
 
@@ -78,6 +81,15 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
 
                 NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.nav_announce_visitor);
+
+            }
+        });
+
+        activeVisitsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.nav_active_visits);
 
             }
         });

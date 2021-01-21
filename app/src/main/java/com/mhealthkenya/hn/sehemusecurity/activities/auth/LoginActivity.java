@@ -2,10 +2,12 @@ package com.mhealthkenya.hn.sehemusecurity.activities.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -33,7 +35,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText edtxt_phone;
     private TextInputLayout til_password;
     private TextInputEditText edtxt_password;
+    private TextView forgotPassword;
     private MaterialButton btn_sign_in;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +45,47 @@ public class LoginActivity extends AppCompatActivity {
         Stash.init(this);
         setContentView(R.layout.activity_login);
 
+        initialise();
 
-        til_phone = findViewById(R.id.til_phone);
-        edtxt_phone = findViewById(R.id.edtxt_phone);
-        til_password = findViewById(R.id.til_password);
-        edtxt_password = findViewById(R.id.edtxt_password);
-        btn_sign_in = findViewById(R.id.btn_sign_in);
+        pDialog = new ProgressDialog(LoginActivity.this);
+        pDialog.setTitle("Signing In...");
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+
+
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent mint = new Intent(LoginActivity.this,ResetPasswordActivity.class);
+                mint.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mint);
+
+            }
+        });
 
         btn_sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                pDialog.show();
                 loginRequest();
 
             }
         });
+
+    }
+
+    public void initialise(){
+
+        til_phone = findViewById(R.id.til_phone);
+        edtxt_phone = findViewById(R.id.edtxt_phone);
+        til_password = findViewById(R.id.til_password);
+        edtxt_password = findViewById(R.id.edtxt_password);
+        forgotPassword = findViewById(R.id.tv_forgot_password);
+        btn_sign_in = findViewById(R.id.btn_sign_in);
+
 
     }
 
@@ -85,6 +115,11 @@ public class LoginActivity extends AppCompatActivity {
 
 //                        Log.e(TAG, response.toString());
 
+                        if (pDialog != null && pDialog.isShowing()) {
+                            pDialog.hide();
+                            pDialog.cancel();
+                        }
+
                         try {
                             boolean  status = response.has("success") && response.getBoolean("success");
                             String error = response.has("error") ? response.getString("error") : "";
@@ -109,6 +144,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             }else if (!status){
 
+                                if (pDialog != null && pDialog.isShowing()) {
+                                    pDialog.hide();
+                                    pDialog.cancel();
+                                }
+
                                 Snackbar.make(findViewById(R.id.login_lyt), error, Snackbar.LENGTH_LONG).show();
 
                             }
@@ -118,15 +158,17 @@ public class LoginActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-
-
-
                     }
 
                     @Override
                     public void onError(ANError error) {
                         // handle error
                         Log.e(TAG, error.getErrorBody());
+
+                        if (pDialog != null && pDialog.isShowing()) {
+                            pDialog.hide();
+                            pDialog.cancel();
+                        }
 
 
 
@@ -142,23 +184,26 @@ public class LoginActivity extends AppCompatActivity {
 
                             Snackbar.make(findViewById(R.id.login_lyt), "Clock-out time passed, cannot login to app " , Snackbar.LENGTH_LONG).show();
 
+                        }
+                        else if(error.getErrorCode() == 0 ){
+
+                            Snackbar.make(findViewById(R.id.login_lyt), "Please try again later!" , Snackbar.LENGTH_LONG).show();
 
                         }
+                        else if(error.getErrorCode() == 500 ){
 
+                            Snackbar.make(findViewById(R.id.login_lyt), "Internal Server Error. Please try again later!" , Snackbar.LENGTH_LONG).show();
+
+                        }
                         else {
 
                             Snackbar.make(findViewById(R.id.login_lyt), "" + error.getErrorBody(), Snackbar.LENGTH_LONG).show();
 
-
                         }
-
 
                     }
                 });
 
-
-
     }
-
 
 }

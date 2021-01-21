@@ -8,6 +8,8 @@ import android.os.Bundle;
 import com.mhealthkenya.hn.sehemusecurity.R;
 import com.mhealthkenya.hn.sehemusecurity.activities.auth.LoginActivity;
 
+/*CREATED BY Hugh*/
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
