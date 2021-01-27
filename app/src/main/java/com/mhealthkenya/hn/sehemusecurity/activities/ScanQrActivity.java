@@ -261,12 +261,60 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
                             }
                             else{
 
-                                Toast.makeText(ScanQrActivity.this, errors, Toast.LENGTH_SHORT).show();
+                                if (errors.contains("Invalid QR")){
+
+                                    AlertDialog.Builder builder= new AlertDialog.Builder(ScanQrActivity.this);
+                                    builder.setTitle("Error");
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent mint = new Intent(ScanQrActivity.this, MainActivity.class);
+                                            startActivity(mint);
+                                        }
+                                    });
+                                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            scannerView.resumeCameraPreview(ScanQrActivity.this);
+                                            verifyQR(scanResult);
+
+                                        }
+                                    });
+                                    builder.setMessage("Invalid QR Code.");
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+
+                                }
+                                else if (errors.contains("Visit date is")){
+
+                                    AlertDialog.Builder builder= new AlertDialog.Builder(ScanQrActivity.this);
+                                    builder.setTitle("Error");
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent mint = new Intent(ScanQrActivity.this, MainActivity.class);
+                                            startActivity(mint);
+                                        }
+                                    });
+                                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            scannerView.resumeCameraPreview(ScanQrActivity.this);
+
+                                        }
+                                    });
+                                    builder.setMessage(errors);
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+
+                                }
+
+
 
                             }
 
                             scannerView.stopCamera();
-                            scannerView.startCamera();
+
 
 
                         } catch (JSONException e) {
@@ -332,9 +380,8 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
                             AlertDialog alert = builder.create();
                             alert.show();
 
-                        } else
+                        }
 
-                        Toast.makeText(ScanQrActivity.this, ""+error.getErrorBody(), Toast.LENGTH_SHORT).show();
 
                     }
                 });

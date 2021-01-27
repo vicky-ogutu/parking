@@ -186,7 +186,18 @@ public class AnnounceVisitorFragment extends Fragment {
                         Log.e(TAG, error.getErrorBody());
                         Log.e(TAG, String.valueOf(error.getErrorCode()));
 
-                        Snackbar.make(root.findViewById(R.id.frag_announce_visitor), "" + error.getErrorBody(), Snackbar.LENGTH_LONG).show();
+                        if (error.getErrorBody().contains("An error occurred")){
+
+                            Snackbar.make(root.findViewById(R.id.frag_announce_visitor), "Ensure you fill the required details.", Snackbar.LENGTH_LONG).show();
+
+                        }
+                        else{
+
+                            Snackbar.make(root.findViewById(R.id.frag_announce_visitor), "" + error.getErrorBody(), Snackbar.LENGTH_LONG).show();
+
+
+                        }
+
                     }
                 });
 

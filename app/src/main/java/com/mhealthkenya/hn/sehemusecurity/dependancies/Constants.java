@@ -16,7 +16,7 @@ public class Constants {
 
 
     //VISITS
-    public static String ORGANIZATION =  "api/organization/get/";
+    public static String ORGANIZATION =  "api/security/get/org/";
     public static String PERSON_VISITING =  "api/persons/org/";
     public static String WALKIN_VISIT =  "api/visits/walkin/";
     public static String VERIFY_VISIT =  "api/visits/verify/";

@@ -1,8 +1,10 @@
 package com.mhealthkenya.hn.sehemusecurity.activities.auth;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.mhealthkenya.hn.sehemusecurity.R;
 import com.mhealthkenya.hn.sehemusecurity.activities.MainActivity;
+import com.mhealthkenya.hn.sehemusecurity.activities.ScanQrActivity;
 import com.mhealthkenya.hn.sehemusecurity.dependancies.Constants;
 import com.mhealthkenya.hn.sehemusecurity.models.auth;
 
@@ -182,7 +185,31 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else if(error.getErrorBody().contains("Clock-out time passed,") ){
 
-                            Snackbar.make(findViewById(R.id.login_lyt), "Clock-out time passed, cannot login to app " , Snackbar.LENGTH_LONG).show();
+
+                            AlertDialog.Builder builder= new AlertDialog.Builder(LoginActivity.this);
+                            builder.setTitle("Alert.");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+                                    edtxt_phone.getText().clear();
+                                    edtxt_password.getText().clear();
+
+                                }
+                            });
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.cancel();
+
+                                }
+                            });
+                            builder.setMessage("Clock-out time passed, cannot login to app. Please try again at your check in time.");
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
 
                         }
                         else if(error.getErrorCode() == 0 ){
