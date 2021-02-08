@@ -155,6 +155,12 @@ public class LoginActivity extends AppCompatActivity {
                                 Snackbar.make(findViewById(R.id.login_lyt), error, Snackbar.LENGTH_LONG).show();
 
                             }
+                            else {
+
+                                Snackbar.make(findViewById(R.id.login_lyt), error, Snackbar.LENGTH_LONG).show();
+
+
+                            }
 
 
                         } catch (JSONException e) {
@@ -210,6 +216,13 @@ public class LoginActivity extends AppCompatActivity {
                             AlertDialog alert = builder.create();
                             alert.show();
 
+
+                        }else if (error.getErrorBody().contains("invalid credentials")){
+
+                            Snackbar.make(findViewById(R.id.login_lyt), "Please provide your phone number and password." , Snackbar.LENGTH_LONG).show();
+
+                            til_phone.setError("Please enter a phone number!");
+                            til_password.setError("Please enter a password!");
 
                         }
                         else if(error.getErrorCode() == 0 ){

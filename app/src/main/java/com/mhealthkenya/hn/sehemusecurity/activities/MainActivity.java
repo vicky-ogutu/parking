@@ -45,6 +45,7 @@ import static  com.mhealthkenya.hn.sehemusecurity.dependancies.AppController.TAG
 public class MainActivity extends AppCompatActivity {
 
     private String auth;
+    private auth loggedInUser;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -78,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-//        loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
-//
-//        String auth_token = loggedInUser.getAuth_token();
+        loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
+
+        String auth_token = loggedInUser.getAuth_token();
 
 
         AndroidNetworking.get(Constants.ENDPOINT+Constants.CURRENT_USER)
-                .addHeaders("Authorization","Token "+ auth)
+                .addHeaders("Authorization","Token "+ auth_token)
                 .addHeaders("Content-Type", "application.json")
                 .addHeaders("Accept", "*/*")
                 .addHeaders("Accept", "gzip, deflate, br")

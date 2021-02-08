@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
     }
 
     public  boolean isCameraPermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 19) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.v("TAG","Permission is granted");
