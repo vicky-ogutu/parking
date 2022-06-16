@@ -3,7 +3,7 @@ package com.mhealthkenya.hn.sehemusecurity.dependancies;
 public class Constants {
 
     /*ENDPOINT*/
-    public static String ENDPOINT = "http://sequ-app.mhealthkenya.co.ke/";
+    public static String ENDPOINT = "https://sequ-app.mhealthkenya.co.ke/";
 
 
     //AUTH

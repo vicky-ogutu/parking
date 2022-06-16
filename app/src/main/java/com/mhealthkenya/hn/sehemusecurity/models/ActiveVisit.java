@@ -4,6 +4,7 @@ public class ActiveVisit {
 
     private int id;
     private String uuid;
+    private String temp;
     private String first_name;
     private String last_name;
     private String vehicle_reg;
@@ -26,9 +27,10 @@ public class ActiveVisit {
     public boolean parent = false;
 
 
-    public ActiveVisit(int id, String uuid, String first_name, String last_name, String vehicle_reg, String msisdn, String is_approved, String is_active,String is_started, String is_ended, String national_id, String created_at, String date,String time, String updated_at,String person_visit, String house_visit, String residential, int created_by, String house ) {
+    public ActiveVisit(int id, String uuid, String temp, String first_name, String last_name, String vehicle_reg, String msisdn, String is_approved, String is_active,String is_started, String is_ended, String national_id, String created_at, String date,String time, String updated_at,String person_visit, String house_visit, String residential, int created_by, String house ) {
         this.id = id;
         this.uuid = uuid;
+        this.temp = temp;
         this.first_name = first_name;
         this.last_name = last_name;
         this.vehicle_reg = vehicle_reg;
@@ -64,6 +66,9 @@ public class ActiveVisit {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
+    public void getTemp(String temp){this.temp = temp;}
+    public void setTemp(String temp){this.temp = temp;}
 
     public String getFirst_name() {
         return first_name;

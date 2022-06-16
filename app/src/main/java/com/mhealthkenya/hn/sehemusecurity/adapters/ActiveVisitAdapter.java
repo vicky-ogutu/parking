@@ -116,6 +116,8 @@ public class ActiveVisitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             view.phoneNumber.setText("Phone: " + obj.getMsisdn());
             view.visitDate.setText("Date: " + obj.getDate());
             view.visitTime.setText("Time: " + obj.getTime());
+            //added
+
 
             if (obj.getVehicle_reg().isEmpty()){
 

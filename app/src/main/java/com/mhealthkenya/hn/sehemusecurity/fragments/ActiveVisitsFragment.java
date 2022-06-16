@@ -148,6 +148,7 @@ public class ActiveVisitsFragment extends Fragment {
 
                                         int id = item.has("id") ? item.getInt("id") : 0;
                                         String uuid = item.has("uuid") ? item.getString("uuid") : "";
+                                        String temp = item.has("temp") ? item.getString("temp") : "";
                                         String first_name = item.has("first_name") ? item.getString("first_name") : "";
                                         String last_name = item.has("uuid") ? item.getString("last_name") : "";
                                         String vehicle_reg = item.has("vehicle_reg") ? item.getString("vehicle_reg") : "";
@@ -169,7 +170,7 @@ public class ActiveVisitsFragment extends Fragment {
                                         String house = item.has("house") ? item.getString("house") : "";
 
 
-                                        ActiveVisit newActiveVisit = new ActiveVisit(id,uuid,first_name,last_name,vehicle_reg,msisdn,is_approved,is_active,is_started,is_ended,national_id,created_at,date,time,updated_at,person_visit,house_visit,residential,created_by,house);
+                                        ActiveVisit newActiveVisit = new ActiveVisit(id,uuid, temp, first_name, last_name,vehicle_reg,msisdn,is_approved,is_active,is_started,is_ended,national_id,created_at,date,time,updated_at,person_visit,house_visit,residential,created_by,house);
 
                                         activeVisitArrayList.add(newActiveVisit);
                                         mAdapter.notifyDataSetChanged();

@@ -238,6 +238,7 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
 
                                 int id = verifiedObj.has("id") ? verifiedObj.getInt("id") : 0;
                                 String uuid = verifiedObj.has("uuid") ? verifiedObj.getString("uuid") : "";
+                                String temp = verifiedObj.has("temp") ? verifiedObj.getString("temp") : "";
                                 String first_name = verifiedObj.has("first_name") ? verifiedObj.getString("first_name") : "";
                                 String vehicle_reg = verifiedObj.has("vehicle_reg") ? verifiedObj.getString("vehicle_reg") : "";
                                 String msisdn = verifiedObj.has("msisdn") ? verifiedObj.getString("msisdn") : "";
@@ -251,7 +252,7 @@ public class ScanQrActivity extends AppCompatActivity implements ResultHandler{
                                 String created_by = verifiedObj.has("created_by") ? verifiedObj.getString("created_by") : "";
                                 String updated_by = verifiedObj.has("updated_by") ? verifiedObj.getString("updated_by") : "";
 
-                                VerifiedVisitor visitor = new VerifiedVisitor(id,uuid,first_name,vehicle_reg,msisdn,date,time,is_active,national_id,created_at,updated_at,person_visit,created_by,updated_by);
+                                VerifiedVisitor visitor = new VerifiedVisitor(id,uuid, temp, first_name,vehicle_reg,msisdn,date,time,is_active,national_id,created_at,updated_at,person_visit,created_by,updated_by);
 
                                 VerifiedVisitorDialog verifiedVisitorDialog = VerifiedVisitorDialog.newInstance(visitor, ScanQrActivity.this);
                                 verifiedVisitorDialog.show(getSupportFragmentManager(), verifiedVisitorDialog.getTag());

@@ -57,6 +57,10 @@ public class AnnounceVisitorFragment extends Fragment {
     @BindView(R.id.phone_number)
     TextInputEditText etxt_phone_number;
 
+    @BindView(R.id.temperature)
+    TextInputEditText etxt_temperature;
+
+
     @BindView(R.id.car_registraion)
     TextInputEditText etxt_car_registraion;
 
@@ -133,6 +137,8 @@ public class AnnounceVisitorFragment extends Fragment {
             jsonObject.put("person_visit", personID);
             jsonObject.put("national_id", etxt_id_number.getText().toString());
             jsonObject.put("msisdn", etxt_phone_number.getText().toString());
+            jsonObject.put("temp", etxt_temperature.getText().toString());
+            jsonObject.put("vehicle_reg", etxt_car_registraion.getText().toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -244,6 +250,7 @@ public class AnnounceVisitorFragment extends Fragment {
 
                                     int id = facility.has("id") ? facility.getInt("id") : 0;
                                     String uuid = facility.has("uuid") ? facility.getString("uuid") : "";
+                                    String temp = facility.has("temp") ? facility.getString("temp") : "";
                                     String name = facility.has("name") ? facility.getString("name") : "";
                                     String logo = facility.has("logo") ? facility.getString("logo") : "";
                                     String floor = facility.has("floor") ? facility.getString("floor") : "";
@@ -387,6 +394,7 @@ public class AnnounceVisitorFragment extends Fragment {
 
                                 int id = jsonObject.has("id") ? jsonObject.getInt("id") : 0;
                                 String uuid = jsonObject.has("uuid") ? jsonObject.getString("uuid") : "";
+
                                 String name = jsonObject.has("name") ? jsonObject.getString("name") : "";
                                 String created_at = jsonObject.has("created_at") ? jsonObject.getString("created_at") : "";
                                 String updated_at = jsonObject.has("updated_at") ? jsonObject.getString("updated_at") : "";

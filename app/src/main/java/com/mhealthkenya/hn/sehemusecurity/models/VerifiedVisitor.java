@@ -4,6 +4,7 @@ public class VerifiedVisitor {
 
     private int id;
     private String uuid;
+    private String temp;
     private String first_name;
     private String vehicle_reg;
     private String msisdn;
@@ -19,10 +20,11 @@ public class VerifiedVisitor {
 
 
 
-    public VerifiedVisitor(int id, String uuid,String first_name, String vehicle_reg, String msisdn, String date, String time, String is_active, String national_id, String created_at, String updated_at, String person_visit,String created_by, String updated_by) {
+    public VerifiedVisitor(int id, String temp, String uuid, String first_name, String vehicle_reg, String msisdn, String date, String time, String is_active, String national_id, String created_at, String updated_at, String person_visit,String created_by, String updated_by) {
 
         this.id = id;
         this.uuid = uuid;
+        this.temp = temp;
         this.first_name = first_name;
         this.vehicle_reg = vehicle_reg;
         this.msisdn = msisdn;
@@ -52,6 +54,16 @@ public class VerifiedVisitor {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
+
+    public String getTemp() {
+        return temp;
+    }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
+    }
+
 
     public String getFirst_name() {
         return first_name;
