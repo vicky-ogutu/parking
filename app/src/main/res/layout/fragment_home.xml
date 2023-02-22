@@ -57,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_medium"
-                        android:text="Welcome to SeQuApp"
+                        android:text="Welcome to ParkingApp"
                         android:textAllCaps="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textStyle="bold" />
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_medium"
-                        android:text="Security for all."
+                        android:text="Parking for all."
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                         android:textStyle="bold" />
 
@@ -119,7 +119,7 @@
                                 android:layout_height="wrap_content"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:text="@string/verify_visitors" />
+                                android:text="Register users" />
 
 
                         </LinearLayout>
@@ -166,7 +166,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:singleLine="true"
-                                    android:text="@string/announce_visitors" />
+                                    android:text="Provide Access" />
 
 
                             </LinearLayout>
@@ -228,7 +228,7 @@
                                     android:layout_height="wrap_content"
                                     android:maxLines="1"
                                     android:singleLine="true"
-                                    android:text="@string/active_visits" />
+                                    android:text="Active access" />
 
                             </LinearLayout>
 
@@ -237,6 +237,8 @@
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
+
+                <!-- end  Active users -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -278,19 +280,84 @@
                                     android:layout_height="wrap_content"
                                     android:maxLines="1"
                                     android:singleLine="true"
-                                    android:text="@string/profile" />
+                                    android:text="White/Black lists" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
+
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
+
             </LinearLayout>
 
+
+
+            <!-- Begin -->
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/spacing_large" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Reports"
+                android:layout_margin="@dimen/spacing_medium"
+
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/reportImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:paddingTop="@dimen/spacing_large"
+                        android:src="@drawable/ic_verify_visitor"
+                        app:tint="@color/colorPrimary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_large">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="Reports" />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
+            <!-- End -->
+
+
+
+        </LinearLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 

@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Bundle bundle = getIntent().getExtras();
-        auth = bundle.getString("auth");
+       /* Bundle bundle = getIntent().getExtras();
+        auth = bundle.getString("auth");*/
 
 
 
@@ -79,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
+        /*loggedInUser = (auth) Stash.getObject(Constants.AUTH_TOKEN, auth.class);
 
-        String auth_token = loggedInUser.getAuth_token();
+        String auth_token = loggedInUser.getAuth_token();*/
 
 
         AndroidNetworking.get(Constants.ENDPOINT+Constants.CURRENT_USER)
-                .addHeaders("Authorization","Token "+ auth_token)
+               // .addHeaders("Authorization","Token "+ auth_token)
                 .addHeaders("Content-Type", "application.json")
                 .addHeaders("Accept", "*/*")
                 .addHeaders("Accept", "gzip, deflate, br")

@@ -72,8 +72,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                pDialog.show();
-                loginRequest();
+               /* pDialog.show();
+                loginRequest();*/
+
+                Intent intent =new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
 
             }
         });
